@@ -16,14 +16,14 @@ func start() int {
 	commands := map[string]func(*library, *catalog, *int) err{
 		"fr": findRecord,
 		"pr": printRecord,
-		// "pc": printCollection,
+		"pc": printCollection,
 		"pL": printLibrary,
-		// "pC": printCatalog,
+		"pC": printCatalog,
 		"ar": addRecord,
-		// "ac": addCollection,
-		// "am": addMember,
-		// "mr": modifyRating,
-		// "dr": deleteRecord,
+		"ac": addCollection,
+		"am": addMember,
+		"mr": modifyRating,
+		"dr": deleteRecord,
 		// "dc": deleteCollection,
 		// "dm": deleteMember,
 		// "cL": clearLibrary,
@@ -83,21 +83,60 @@ func newCatalog() catalog {
 	return make(catalog)
 }
 
-type collection map[string]*record
+func (c *catalog) String() string {
+	collections := map[string](collection)(*c)
 
-func newCollection() map[string]*record {
-	return make(collection)
+	if len(collections) == 0 {
+		return "Catalog is empty"
+	}
+
+	var builder strings.Builder
+	builder.WriteString(fmt.Sprintf("Catalog contains %d collections", len(collections)))
+
+	for _, cat := range collections {
+		builder.WriteRune('\n')
+		builder.WriteString(fmt.Sprint(&cat))
+	}
+
+	return builder.String()
+}
+
+type collection struct {
+	name    string
+	members map[int]*record
+}
+
+func newCollection(name string) collection {
+	return collection{name, make(map[int]*record)}
+}
+
+func (c *collection) String() string {
+	var builder strings.Builder
+
+	builder.WriteString(fmt.Sprintf("Collection %s contains:", c.name))
+
+	if len(c.members) == 0 {
+		builder.WriteString(" None")
+	} else {
+		for _, r := range c.members {
+			builder.WriteRune('\n')
+			builder.WriteString(r.String())
+		}
+	}
+
+	return builder.String()
 }
 
 type record struct {
-	medium string
-	title  string
-	rating int
-	id     int
+	medium         string
+	title          string
+	rating         int
+	id             int
+	numCollections int
 }
 
 func newRecord(medium, title string, id int) record {
-	return record{medium, title, 0, id}
+	return record{medium, title, 0, id, 0}
 }
 
 func (r *record) String() string {
@@ -154,7 +193,7 @@ func findRecord(lib *library, _ *catalog, _ *int) err {
 }
 
 func printRecord(lib *library, _ *catalog, _ *int) err {
-	id, e := readID()
+	id, e := readInt()
 
 	if e != nil {
 		return e
@@ -167,6 +206,18 @@ func printRecord(lib *library, _ *catalog, _ *int) err {
 	}
 
 	return newlineErr{"No record with that ID!"}
+}
+
+func printCollection(_ *library, cat *catalog, _ *int) err {
+	name, _ := readWord()
+
+	if col, ok := (*cat)[name]; ok {
+		fmt.Println(&col)
+
+		return nil
+	}
+
+	return newlineErr{"No collection with that name!"}
 }
 
 func printLibrary(lib *library, _ *catalog, _ *int) err {
@@ -194,6 +245,12 @@ func printLibrary(lib *library, _ *catalog, _ *int) err {
 	return nil
 }
 
+func printCatalog(_ *library, cat *catalog, _ *int) err {
+	fmt.Println(cat)
+
+	return nil
+}
+
 func addRecord(lib *library, _ *catalog, id *int) err {
 	// should never fail unless EOF, which the spec says to ignore
 	medium, _ := readWord()
@@ -216,6 +273,110 @@ func addRecord(lib *library, _ *catalog, id *int) err {
 	lib.byID[thisID] = &rec
 
 	fmt.Println("Record", thisID, "added")
+
+	return nil
+}
+
+func addCollection(_ *library, cat *catalog, id *int) err {
+	name, _ := readWord()
+
+	if _, ok := (*cat)[name]; ok {
+		return newlineErr{"Catalog already has a collection with this name!"}
+	}
+
+	(*cat)[name] = newCollection(name)
+	fmt.Sprintln("Collection", name, "added")
+
+	return nil
+}
+
+func addMember(lib *library, cat *catalog, _ *int) err {
+	name, _ := readWord()
+	col, ok := (*cat)[name]
+
+	if !ok {
+		return newlineErr{"No collection with that name!"}
+	}
+
+	id, e := readInt()
+
+	if e != nil {
+		return e
+	}
+
+	// this complies with the spec, even though the error messages are out of
+	// order, since they're orthogonal
+	// there's no way a collection can have a member that doesn't exist in the
+	// library, so this is safe
+	if _, ok := col.members[id]; ok {
+		return newlineErr{"Record is already a member in the collection!"}
+	}
+
+	rec, ok := lib.byID[id]
+
+	if !ok {
+		return newlineErr{"No record with that ID!"}
+	}
+
+	col.members[id] = rec
+	rec.numCollections++
+	fmt.Println("Member", id, rec.title, "added")
+
+	return nil
+}
+
+func modifyRating(lib *library, _ *catalog, _ *int) err {
+	id, e := readInt()
+
+	if e != nil {
+		return e
+	}
+
+	rec, ok := lib.byID[id]
+
+	if !ok {
+		return newlineErr{"No record with that ID!"}
+	}
+
+	newRating, e := readInt()
+
+	if e != nil {
+		return e
+	}
+
+	if newRating < 1 || newRating > 5 {
+		return newlineErr{"Rating is out of range!"}
+	}
+
+	rec.rating = newRating
+	fmt.Println("Rating for record", id, "changed to", newRating)
+
+	return nil
+}
+
+func deleteRecord(lib *library, _ *catalog, _ *int) err {
+	title, e := readTitle()
+
+	if e != nil {
+		return e
+	}
+
+	rec, ok := lib.byTitle[title]
+
+	if !ok {
+		return regularErr{"No record with that title!"}
+	}
+
+	if rec.numCollections > 0 {
+		return regularErr{"Cannot delete a record that is a member of a collection!"}
+	}
+
+	id := rec.id
+
+	delete(lib.byTitle, title)
+	delete(lib.byID, id)
+
+	fmt.Println("Record", id, title, "deleted")
 
 	return nil
 }
@@ -301,7 +462,7 @@ func readWord() (string, error) {
 
 const errUnreadableInteger = "Could not read an integer!"
 
-func readID() (int, err) {
+func readInt() (int, err) {
 	if _, e := skipWhitespace(); e != nil {
 		return 0, newlineErr{errUnreadableInteger}
 	}
