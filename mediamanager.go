@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"unicode"
@@ -16,7 +17,7 @@ func start() int {
 		"fr": findRecord,
 		"pr": printRecord,
 		// "pc": printCollection,
-		// "pL": printLibrary,
+		"pL": printLibrary,
 		// "pC": printCatalog,
 		"ar": addRecord,
 		// "ac": addCollection,
@@ -168,6 +169,31 @@ func printRecord(lib *library, _ *catalog, _ *int) err {
 	return newlineErr{"No record with that ID!"}
 }
 
+func printLibrary(lib *library, _ *catalog, _ *int) err {
+	if len(lib.byTitle) == 0 {
+		fmt.Println("Library is empty")
+
+		return nil
+	}
+
+	titleSet := make([]string, 0, len(lib.byTitle))
+
+	for title := range lib.byTitle {
+		titleSet = append(titleSet, title)
+	}
+
+	sort.Strings(titleSet)
+
+	fmt.Println("Library contains", len(titleSet), "records:")
+
+	for _, title := range titleSet {
+		r := lib.byTitle[title]
+		fmt.Println(r)
+	}
+
+	return nil
+}
+
 func addRecord(lib *library, _ *catalog, id *int) err {
 	// should never fail unless EOF, which the spec says to ignore
 	medium, _ := readWord()
@@ -188,6 +214,8 @@ func addRecord(lib *library, _ *catalog, id *int) err {
 
 	lib.byTitle[title] = &rec
 	lib.byID[thisID] = &rec
+
+	fmt.Println("Record", thisID, "added")
 
 	return nil
 }
