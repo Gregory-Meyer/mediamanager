@@ -98,7 +98,7 @@ func ReadWord(reader *bufio.Reader) string {
 	return word.String()
 }
 
-const errUnreadableInteger = "Could not read an integer!"
+const errUnreadableInteger = "Could not read an integer value!"
 
 // ReadInt skips whitespace, then reads up until the next non-numeric character
 // Panics if an error is encountered while extracting input

@@ -47,7 +47,7 @@ func RestoreCatalog(reader *bufio.Reader, library *Library) (*Catalog, Error) {
 	return catalog, nil
 }
 
-const errNoSuchCollection = "Could not read an integer!"
+const errNoSuchCollection = "No collection with that name!"
 
 // FindCollection indexes into a Collection by its name
 func (c *Catalog) FindCollection(name string) (*Collection, Error) {
