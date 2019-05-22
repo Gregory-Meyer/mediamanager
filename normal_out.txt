@@ -111,5 +111,7 @@ Enter command: Catalog contains 1 collections:
 Collection favorites contains:
 5: VHS u Zorba the Greek
 
-Enter command: 
-Enter command: Done
+Enter command: All data deleted
+
+Enter command: All data deleted
+Done
