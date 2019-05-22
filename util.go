@@ -9,6 +9,8 @@ import (
 	"unicode"
 )
 
+const ErrInvalidFile = "Invalid data found in file!"
+
 // Error combines error reporting with newline handling
 type Error interface {
 	error
@@ -48,12 +50,16 @@ func FprintfOrPanic(writer io.Writer, format string, args ...interface{}) {
 	}
 }
 
-// ReadLine reads until the next newline character, discarding the suffix
+// ReadLine reads until the next newline character or EOF, discarding the suffix
 // Panics if an error is encountered
 func ReadLine(reader *bufio.Reader) string {
 	line, err := reader.ReadString('\n')
 
 	if err != nil {
+		if err == io.EOF {
+			return line
+		}
+
 		panic(err)
 	}
 
@@ -68,22 +74,28 @@ func ReadWord(reader *bufio.Reader) string {
 	var word strings.Builder
 
 	for {
-		r, _, err := stdin.ReadRune()
+		r, _, err := reader.ReadRune()
 
 		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
 			panic(err)
 		} else if unicode.IsSpace(r) {
-			err = stdin.UnreadRune()
+			err = reader.UnreadRune()
 
 			if err != nil {
 				panic(err)
 			}
 
-			return word.String()
+			break
 		}
 
 		word.WriteRune(r)
 	}
+
+	return word.String()
 }
 
 const errUnreadableInteger = "Could not read an integer!"
@@ -98,6 +110,10 @@ func ReadInt(reader *bufio.Reader) (int, Error) {
 	r, _, err := reader.ReadRune()
 
 	if err != nil {
+		if err == io.EOF {
+			return 0, NewlineError(errUnreadableInteger)
+		}
+
 		panic(err)
 	}
 
@@ -110,6 +126,10 @@ func ReadInt(reader *bufio.Reader) (int, Error) {
 		r, _, err = reader.ReadRune()
 
 		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
 			panic(err)
 		} else if !unicode.IsNumber(r) {
 			err = reader.UnreadRune()
@@ -139,6 +159,10 @@ func SkipWhitespace(reader *bufio.Reader) {
 		r, _, err := reader.ReadRune()
 
 		if err != nil {
+			if err == io.EOF {
+				return
+			}
+
 			panic(err)
 		} else if !unicode.IsSpace(r) {
 			err = reader.UnreadRune()

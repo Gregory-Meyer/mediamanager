@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"sort"
@@ -17,6 +18,33 @@ type Catalog struct {
 // NewCatalog creates a Catalog ready to track Collections
 func NewCatalog() *Catalog {
 	return &Catalog{make(catalogCollections)}
+}
+
+// RestoreCatalog deserializes a Catalog from a *bufio.Reader
+func RestoreCatalog(reader *bufio.Reader, library *Library) (*Catalog, Error) {
+	numCollections, err := ReadInt(reader)
+
+	if err != nil || numCollections < 0 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	catalog := NewCatalog()
+
+	for i := 0; i < numCollections; i++ {
+		collection, err := RestoreCollection(reader, library)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if _, ok := catalog.collections[collection.name]; ok {
+			return nil, NewlineError(ErrInvalidFile)
+		}
+
+		catalog.collections[collection.name] = collection
+	}
+
+	return catalog, nil
 }
 
 const errNoSuchCollection = "Could not read an integer!"
@@ -70,8 +98,8 @@ func (c *Catalog) Clear() {
 func (c *Catalog) Save(writer io.Writer) {
 	FprintfOrPanic(writer, "%d\n", len(c.collections))
 
-	for _, name := range c.sortedCollectionNames() {
-		c.collections[name].Save(writer)
+	for _, collection := range c.sortedCollections() {
+		collection.Save(writer)
 	}
 }
 
@@ -80,20 +108,12 @@ func (c *Catalog) String() string {
 		return "Catalog is empty"
 	}
 
-	nameSet := make([]string, 0, len(c.collections))
-
-	for title := range c.collections {
-		nameSet = append(nameSet, title)
-	}
-
-	sort.Strings(nameSet)
-
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("Catalog contains %d collections:", len(c.collections)))
 
-	for _, name := range nameSet {
+	for _, collection := range c.sortedCollections() {
 		builder.WriteRune('\n')
-		builder.WriteString(c.collections[name].String())
+		builder.WriteString(collection.String())
 	}
 
 	return builder.String()
@@ -108,14 +128,16 @@ func clearCollection(collection *Collection) {
 	collection.members = make(collectionMembers)
 }
 
-func (c *Catalog) sortedCollectionNames() []string {
-	nameSet := make([]string, 0, len(c.collections))
+func (c *Catalog) sortedCollections() []*Collection {
+	collectionSet := make([]*Collection, 0, len(c.collections))
 
-	for name := range c.collections {
-		nameSet = append(nameSet, name)
+	for _, collection := range c.collections {
+		collectionSet = append(collectionSet, collection)
 	}
 
-	sort.Strings(nameSet)
+	sort.Slice(collectionSet, func(i, j int) bool {
+		return collectionSet[i].name < collectionSet[j].name
+	})
 
-	return nameSet
+	return collectionSet
 }

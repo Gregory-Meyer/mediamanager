@@ -27,7 +27,7 @@ func main() {
 		"cC": clearCatalog,
 		"cA": clearAll,
 		"sA": saveAll,
-		// "rA": restoreAll,
+		"rA": restoreAll,
 	}
 
 	library := NewLibrary()
@@ -278,6 +278,38 @@ func saveAll(library *Library, catalog *Catalog) Error {
 
 	library.Save(file)
 	catalog.Save(file)
+
+	fmt.Println("Data saved")
+
+	return nil
+}
+
+func restoreAll(library *Library, catalog *Catalog) Error {
+	filename := ReadWord(stdin)
+	file, err := os.Open(filename)
+
+	if err != nil {
+		return NewlineError(errUnopenableFile)
+	}
+
+	reader := bufio.NewReader(file)
+
+	newLibrary, parseErr := RestoreLibrary(reader)
+
+	if parseErr != nil {
+		return parseErr
+	}
+
+	newCatalog, parseErr := RestoreCatalog(reader, newLibrary)
+
+	if parseErr != nil {
+		return parseErr
+	}
+
+	*library = *newLibrary
+	*catalog = *newCatalog
+
+	fmt.Println("Data loaded")
 
 	return nil
 }

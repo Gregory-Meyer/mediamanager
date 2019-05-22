@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 )
@@ -17,6 +18,37 @@ type Record struct {
 // NewRecord creates a Record
 func NewRecord(medium, title string, id int) *Record {
 	return &Record{medium, title, 0, id, 0}
+}
+
+// RestoreRecord deserializes a Record from a *bufio.Reader
+func RestoreRecord(reader *bufio.Reader) (*Record, Error) {
+	id, err := ReadInt(reader)
+
+	if err != nil || id < 1 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	medium := ReadWord(reader)
+
+	// EOF
+	if len(medium) == 0 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	rating, err := ReadInt(reader)
+
+	if err != nil || rating < 0 || rating > 5 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	SkipWhitespace(reader)
+	title := ReadLine(reader)
+
+	if len(title) == 0 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	return &Record{medium, title, rating, id, 0}, nil
 }
 
 // ID gives the ID of this Record, which starts at 1 and goes up from there

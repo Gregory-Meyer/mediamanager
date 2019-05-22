@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"sort"
@@ -20,6 +21,45 @@ type Library struct {
 // NewLibrary creates an empty Library ready to track Records
 func NewLibrary() *Library {
 	return &Library{make(libraryByTitle), make(libraryByID), 1}
+}
+
+// RestoreLibrary deserializes a Library from a *bufio.Reader
+func RestoreLibrary(reader *bufio.Reader) (*Library, Error) {
+	library := NewLibrary()
+
+	numRecords, err := ReadInt(reader)
+
+	if err != nil || numRecords < 0 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	maxID := 0
+
+	for i := 0; i < numRecords; i++ {
+		record, err := RestoreRecord(reader)
+
+		if err != nil {
+			return nil, err
+		}
+
+		// no duplicate records allowed
+		if _, ok := library.byID[record.id]; ok {
+			return nil, NewlineError(ErrInvalidFile)
+		} else if _, ok := library.byTitle[record.title]; ok {
+			return nil, NewlineError(ErrInvalidFile)
+		}
+
+		library.byTitle[record.title] = record
+		library.byID[record.id] = record
+
+		if record.id > maxID {
+			maxID = record.id
+		}
+	}
+
+	library.nextID = maxID + 1
+
+	return library, nil
 }
 
 const errNoSuchRecordTitle = "No record with that title!"
@@ -103,8 +143,8 @@ func (l *Library) ClearAll(catalog *Catalog) {
 func (l *Library) Save(writer io.Writer) {
 	FprintfOrPanic(writer, "%d\n", len(l.byTitle))
 
-	for _, title := range l.sortedRecordTitles() {
-		l.byTitle[title].Save(writer)
+	for _, record := range l.sortedRecords() {
+		record.Save(writer)
 	}
 }
 
@@ -116,9 +156,9 @@ func (l *Library) String() string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("Library contains %d records:", len(l.byTitle)))
 
-	for _, title := range l.sortedRecordTitles() {
+	for _, record := range l.sortedRecords() {
 		builder.WriteRune('\n')
-		builder.WriteString(l.byTitle[title].String())
+		builder.WriteString(record.String())
 	}
 
 	return builder.String()
@@ -130,14 +170,16 @@ func (l *Library) doClear() {
 	l.nextID = 1
 }
 
-func (l *Library) sortedRecordTitles() []string {
-	titleSet := make([]string, 0, len(l.byTitle))
+func (l *Library) sortedRecords() []*Record {
+	recordSet := make([]*Record, 0, len(l.byTitle))
 
-	for title := range l.byTitle {
-		titleSet = append(titleSet, title)
+	for _, record := range l.byTitle {
+		recordSet = append(recordSet, record)
 	}
 
-	sort.Strings(titleSet)
+	sort.Slice(recordSet, func(i, j int) bool {
+		return recordSet[i].title < recordSet[j].title
+	})
 
-	return titleSet
+	return recordSet
 }

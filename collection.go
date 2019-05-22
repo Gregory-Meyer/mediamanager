@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"sort"
@@ -18,6 +19,43 @@ type Collection struct {
 // NewCollection creates a Collection
 func NewCollection(name string) *Collection {
 	return &Collection{name, make(collectionMembers)}
+}
+
+// RestoreCollection deserializes a Collection from a *bufio.Reader
+func RestoreCollection(reader *bufio.Reader, library *Library) (*Collection, Error) {
+	name := ReadWord(reader)
+
+	// EOF
+	if len(name) == 0 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	collection := NewCollection(name)
+	numMembers, err := ReadInt(reader)
+
+	if err != nil || numMembers < 0 {
+		return nil, NewlineError(ErrInvalidFile)
+	}
+
+	ReadLine(reader)
+
+	for i := 0; i < numMembers; i++ {
+		title := ReadLine(reader)
+		record, ok := library.byTitle[title]
+
+		if !ok {
+			return nil, NewlineError(ErrInvalidFile)
+		}
+
+		if _, ok := collection.members[record.id]; ok {
+			return nil, NewlineError(ErrInvalidFile)
+		}
+
+		collection.members[record.id] = record
+		record.numCollections++
+	}
+
+	return collection, nil
 }
 
 // AddMember inserts a Record into this Collection's set of members
@@ -48,8 +86,8 @@ func (c *Collection) DeleteMember(record *Record) Error {
 func (c *Collection) Save(writer io.Writer) {
 	FprintfOrPanic(writer, "%s %d\n", c.name, len(c.members))
 
-	for _, title := range c.sortedMemberTitles() {
-		FprintfOrPanic(writer, "%s\n", title)
+	for _, record := range c.sortedMembers() {
+		FprintfOrPanic(writer, "%s\n", record.title)
 	}
 }
 
@@ -61,23 +99,25 @@ func (c *Collection) String() string {
 	if len(c.members) == 0 {
 		builder.WriteString(" None")
 	} else {
-		for _, r := range c.members {
+		for _, record := range c.sortedMembers() {
 			builder.WriteRune('\n')
-			builder.WriteString(r.String())
+			builder.WriteString(record.String())
 		}
 	}
 
 	return builder.String()
 }
 
-func (c *Collection) sortedMemberTitles() []string {
-	titleSet := make([]string, 0, len(c.members))
+func (c *Collection) sortedMembers() []*Record {
+	memberSet := make([]*Record, 0, len(c.members))
 
 	for _, record := range c.members {
-		titleSet = append(titleSet, record.title)
+		memberSet = append(memberSet, record)
 	}
 
-	sort.Strings(titleSet)
+	sort.Slice(memberSet, func(i, j int) bool {
+		return memberSet[i].title < memberSet[j].title
+	})
 
-	return titleSet
+	return memberSet
 }
