@@ -1,0 +1,26 @@
+pR 1
+pr x1
+pr 1
+fr Tobruk
+ar DVD Tobruk
+ar VHS
+ar VHS Tobruk
+ar DVD Mars Attacks!
+fr Mars attacks!!!
+mr 1 0
+pc favorites
+ac warmovies
+ac warmovies
+am warmovies 2
+am warmovies 2
+dm warmovies 1
+dr 2
+dr Mars Attacks!
+cL
+sA .. should be invalid filename on a Unix machine
+rA nonexistentfile
+rA badfile.txt
+qq
+
+
+

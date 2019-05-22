@@ -1,0 +1,47 @@
+
+Enter command: Unrecognized command!
+
+Enter command: Could not read an integer value!
+
+Enter command: No record with that ID!
+
+Enter command: No record with that title!
+
+Enter command: Record 1 added
+
+Enter command: Could not read a title!
+
+Enter command: Library already has a record with this title!
+
+Enter command: Record 2 added
+
+Enter command: No record with that title!
+
+Enter command: Rating is out of range!
+
+Enter command: No collection with that name!
+
+Enter command: Collection warmovies added
+
+Enter command: Catalog already has a collection with this name!
+
+Enter command: Member 2 Mars Attacks! added
+
+Enter command: Record is already a member in the collection!
+
+Enter command: Record is not a member in the collection!
+
+Enter command: No record with that title!
+
+Enter command: Cannot delete a record that is a member of a collection!
+
+Enter command: Cannot clear all records unless all collections are empty!
+
+Enter command: Could not open file!
+
+Enter command: Could not open file!
+
+Enter command: Invalid data found in file!
+
+Enter command: All data deleted
+Done
