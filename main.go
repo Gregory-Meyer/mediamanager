@@ -262,6 +262,7 @@ func clearCatalog(_ *Library, catalog *Catalog) Error {
 
 func clearAll(library *Library, catalog *Catalog) Error {
 	library.ClearAll(catalog)
+	fmt.Println("All data deleted")
 
 	return nil
 }
