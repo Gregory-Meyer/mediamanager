@@ -367,14 +367,14 @@ func readCommand() (string, error) {
 	var command strings.Builder
 
 	for i := 0; i < commandLength; i++ {
-		if _, e := skipWhitespace(); e != nil {
-			return "", e
+		if _, err := skipWhitespace(); err != nil {
+			return "", err
 		}
 
-		r, _, e := stdin.ReadRune()
+		r, _, err := stdin.ReadRune()
 
-		if e != nil {
-			return "", e
+		if err != nil {
+			return "", err
 		}
 
 		command.WriteRune(r)
@@ -394,8 +394,8 @@ func readWordOrPanic() string {
 }
 
 func readWord() (string, error) {
-	if _, e := skipWhitespace(); e != nil {
-		return "", e
+	if _, err := skipWhitespace(); err != nil {
+		return "", err
 	}
 
 	var word strings.Builder
