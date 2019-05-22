@@ -4,14 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
-	"unicode"
 )
 
 var stdin *bufio.Reader
 
-func start() int {
+func main() {
 	commands := map[string]func(*Library, *Catalog) Error{
 		"fr": findRecord,
 		"pr": printRecord,
@@ -32,18 +30,14 @@ func start() int {
 		// "rA": restoreAll,
 	}
 
-	Library := NewLibrary()
+	library := NewLibrary()
 	cat := NewCatalog()
 	stdin = bufio.NewReader(os.Stdin)
 
 	for {
 		fmt.Print("\nEnter command: ")
 
-		cmd, e := readCommand()
-
-		if e != nil { // EOF, probably
-			return 0
-		}
+		cmd := readCommand()
 
 		if cmd == "qq" {
 			break
@@ -51,10 +45,10 @@ func start() int {
 
 		if command, ok := commands[cmd]; !ok {
 			fmt.Println("Unrecognized command!")
-			readLineOrPanic()
-		} else if e := command(Library, cat); e != nil {
+			ReadLine(stdin)
+		} else if e := command(library, cat); e != nil {
 			if e.ShouldSkipNewline() {
-				readLineOrPanic()
+				ReadLine(stdin)
 			}
 
 			fmt.Println(e)
@@ -62,8 +56,6 @@ func start() int {
 	}
 
 	fmt.Println("Done")
-
-	return 0
 }
 
 func findRecord(library *Library, _ *Catalog) Error {
@@ -115,7 +107,7 @@ func printCatalog(_ *Library, cat *Catalog) Error {
 }
 
 func addRecord(library *Library, _ *Catalog) Error {
-	medium := readWordOrPanic()
+	medium := ReadWord(stdin)
 	title, err := readTitle()
 
 	if err != nil {
@@ -134,7 +126,7 @@ func addRecord(library *Library, _ *Catalog) Error {
 }
 
 func addCollection(_ *Library, catalog *Catalog) Error {
-	name := readWordOrPanic()
+	name := ReadWord(stdin)
 	err := catalog.AddCollection(name)
 
 	if err != nil {
@@ -177,7 +169,7 @@ func modifyRating(library *Library, _ *Catalog) Error {
 		return err
 	}
 
-	newRating, err := readInt()
+	newRating, err := ReadInt(stdin)
 
 	if err != nil {
 		return err
@@ -213,7 +205,7 @@ func deleteRecord(library *Library, _ *Catalog) Error {
 }
 
 func deleteCollection(_ *Library, catalog *Catalog) Error {
-	name := readWordOrPanic()
+	name := ReadWord(stdin)
 	err := catalog.DeleteCollection(name)
 
 	if err != nil {
@@ -277,7 +269,7 @@ func clearAll(library *Library, catalog *Catalog) Error {
 const errUnopenableFile = "Could not open file!"
 
 func saveAll(library *Library, catalog *Catalog) Error {
-	filename := readWordOrPanic()
+	filename := ReadWord(stdin)
 	file, err := os.Create(filename)
 
 	if err != nil {
@@ -301,7 +293,7 @@ func readRecordByTitle(library *Library) (*Record, Error) {
 }
 
 func readRecordByID(library *Library) (*Record, Error) {
-	id, err := readInt()
+	id, err := ReadInt(stdin)
 
 	if err != nil {
 		return nil, err
@@ -311,18 +303,13 @@ func readRecordByID(library *Library) (*Record, Error) {
 }
 
 func readCollection(catalog *Catalog) (*Collection, Error) {
-	name, err := readWord()
-
-	// this shouldn't happen
-	if err != nil {
-		panic(err)
-	}
+	name := ReadWord(stdin)
 
 	return catalog.FindCollection(name)
 }
 
 func readTitle() (string, Error) {
-	line := readLineOrPanic()
+	line := ReadLine(stdin)
 	fields := strings.Fields(line)
 
 	if len(fields) == 0 {
@@ -341,148 +328,21 @@ func readTitle() (string, Error) {
 	return title.String(), nil
 }
 
-func readLineOrPanic() string {
-	line, err := readLine()
-
-	if err != nil {
-		panic(err)
-	}
-
-	return line
-}
-
-func readLine() (string, error) {
-	line, err := stdin.ReadString('\n')
-
-	if err != nil {
-		return "", err
-	}
-
-	return strings.TrimSuffix(line, "\n"), nil
-}
-
-func readCommand() (string, error) {
+func readCommand() string {
 	const commandLength = 2
 
 	var command strings.Builder
 
 	for i := 0; i < commandLength; i++ {
-		if _, err := skipWhitespace(); err != nil {
-			return "", err
-		}
-
+		SkipWhitespace(stdin)
 		r, _, err := stdin.ReadRune()
 
 		if err != nil {
-			return "", err
+			panic(err)
 		}
 
 		command.WriteRune(r)
 	}
 
-	return command.String(), nil
-}
-
-func readWordOrPanic() string {
-	word, err := readWord()
-
-	if err != nil {
-		panic(err)
-	}
-
-	return word
-}
-
-func readWord() (string, error) {
-	if _, err := skipWhitespace(); err != nil {
-		return "", err
-	}
-
-	var word strings.Builder
-
-	for {
-		r, _, err := stdin.ReadRune()
-
-		if err != nil {
-			return "", err
-		} else if unicode.IsSpace(r) {
-			err = stdin.UnreadRune()
-
-			if err != nil {
-				return "", err
-			}
-
-			return word.String(), nil
-		}
-
-		word.WriteRune(r)
-	}
-}
-
-const errUnreadableInteger = "Could not read an integer!"
-
-func readInt() (int, Error) {
-	if _, err := skipWhitespace(); err != nil {
-		return 0, NewlineError(errUnreadableInteger)
-	}
-
-	var idBuilder strings.Builder
-
-	r, _, err := stdin.ReadRune()
-
-	if err != nil || (r != '+' && r != '-' && !unicode.IsNumber(r)) {
-		return 0, NewlineError(errUnreadableInteger)
-	}
-
-	for {
-		idBuilder.WriteRune(r)
-		r, _, err = stdin.ReadRune()
-
-		if err != nil {
-			return 0, NewlineError(errUnreadableInteger)
-		} else if !unicode.IsNumber(r) {
-			err = stdin.UnreadRune()
-
-			if err != nil {
-				return 0, NewlineError(errUnreadableInteger)
-			}
-
-			break
-		}
-	}
-
-	idStr := idBuilder.String()
-	id, e := strconv.Atoi(idStr)
-
-	if e != nil {
-		return 0, NewlineError(errUnreadableInteger)
-	}
-
-	return id, nil
-}
-
-func skipWhitespace() (int, error) {
-	numRead := 0
-
-	for {
-		r, _, err := stdin.ReadRune()
-
-		if err != nil {
-			return numRead, err
-		} else if !unicode.IsSpace(r) {
-			err = stdin.UnreadRune()
-
-			if err != nil {
-				return 0, err
-			}
-
-			return numRead, nil
-		}
-
-		numRead++
-	}
-}
-
-func main() {
-	os.Exit(start())
+	return command.String()
 }
