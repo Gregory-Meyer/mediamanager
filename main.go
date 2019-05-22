@@ -31,7 +31,7 @@ func main() {
 	}
 
 	library := NewLibrary()
-	cat := NewCatalog()
+	catalog := NewCatalog()
 	stdin = bufio.NewReader(os.Stdin)
 
 	for {
@@ -46,7 +46,7 @@ func main() {
 		if command, ok := commands[cmd]; !ok {
 			fmt.Println("Unrecognized command!")
 			ReadLine(stdin)
-		} else if e := command(library, cat); e != nil {
+		} else if e := command(library, catalog); e != nil {
 			if e.ShouldSkipNewline() {
 				ReadLine(stdin)
 			}
@@ -55,6 +55,7 @@ func main() {
 		}
 	}
 
+	_ = clearAll(library, catalog)
 	fmt.Println("Done")
 }
 
