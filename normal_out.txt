@@ -1,0 +1,115 @@
+
+Enter command: Library is empty
+
+Enter command: Catalog is empty
+
+Enter command: Record 1 added
+
+Enter command: Record 2 added
+
+Enter command: Record 3 added
+
+Enter command: Record 4 added
+
+Enter command: Record 5 added
+
+Enter command: Library contains 5 records:
+3: DVD u Mars Attacks!
+4: DVD u Much Ado about Nothing
+2: VHS u Showboat
+1: DVD u Tobruk
+5: VHS u Zorba the Greek
+
+Enter command: 5: VHS u Zorba the Greek
+
+Enter command: Rating for record 1 changed to 1
+
+Enter command: Rating for record 2 changed to 4
+
+Enter command: Rating for record 4 changed to 5
+
+Enter command: 1: DVD 1 Tobruk
+
+Enter command: Record 3 Mars Attacks! deleted
+
+Enter command: Library contains 4 records:
+4: DVD 5 Much Ado about Nothing
+2: VHS 4 Showboat
+1: DVD 1 Tobruk
+5: VHS u Zorba the Greek
+
+Enter command: Catalog is empty
+
+Enter command: Collection favorites added
+
+Enter command: Member 5 Zorba the Greek added
+
+Enter command: Member 2 Showboat added
+
+Enter command: Collection literary added
+
+Enter command: Collection favorites contains:
+2: VHS 4 Showboat
+5: VHS u Zorba the Greek
+
+Enter command: Catalog contains 2 collections:
+Collection favorites contains:
+2: VHS 4 Showboat
+5: VHS u Zorba the Greek
+Collection literary contains: None
+
+Enter command: Member 4 Much Ado about Nothing added
+
+Enter command: Member 5 Zorba the Greek added
+
+Enter command: Catalog contains 2 collections:
+Collection favorites contains:
+2: VHS 4 Showboat
+5: VHS u Zorba the Greek
+Collection literary contains:
+4: DVD 5 Much Ado about Nothing
+5: VHS u Zorba the Greek
+
+Enter command: Record 6 added
+
+Enter command: Data saved
+
+Enter command: All collections deleted
+
+Enter command: All records deleted
+
+Enter command: Data loaded
+
+Enter command: Record 7 added
+
+Enter command: Library contains 6 records:
+6: DVD u Bleak House
+4: DVD 5 Much Ado about Nothing
+2: VHS 4 Showboat
+7: VHS u The Money Pit
+1: DVD 1 Tobruk
+5: VHS u Zorba the Greek
+
+Enter command: Catalog contains 2 collections:
+Collection favorites contains:
+2: VHS 4 Showboat
+5: VHS u Zorba the Greek
+Collection literary contains:
+4: DVD 5 Much Ado about Nothing
+5: VHS u Zorba the Greek
+
+Enter command: Collection literary deleted
+
+Enter command: Catalog contains 1 collections:
+Collection favorites contains:
+2: VHS 4 Showboat
+5: VHS u Zorba the Greek
+
+Enter command: Member 2 Showboat deleted
+
+Enter command: Catalog contains 1 collections:
+Collection favorites contains:
+5: VHS u Zorba the Greek
+
+Enter command: 
+Enter command: Done

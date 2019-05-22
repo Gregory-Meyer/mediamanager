@@ -1,0 +1,44 @@
+pL
+pC
+ar DVD Tobruk
+ar VHS Showboat
+ar DVD        Mars       Attacks!               
+ar DVD   Much     Ado   about   Nothing    
+ar VHS Zorba the Greek
+pL
+fr Zorba the Greek
+mr 1 1
+mr 2 4
+mr 4 5
+pr 1
+dr   Mars          Attacks!    
+pL
+pC
+ac favorites
+am favorites 5
+am favorites 2
+ac literary
+pc favorites
+pC
+am literary 4
+am literary 5
+pC
+
+ar DVD Bleak House
+sA savefile1.txt
+cC
+cL
+rA savefile1.txt
+ar VHS The Money Pit
+pL
+pC
+dc literary
+pC
+dm favorites 2
+pC
+cA
+qq
+
+
+
+
