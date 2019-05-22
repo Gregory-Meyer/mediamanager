@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"sort"
 	"strings"
 )
@@ -98,10 +99,13 @@ func (l *Library) ClearAll(catalog *Catalog) {
 	l.doClear()
 }
 
-func (l *Library) doClear() {
-	l.byTitle = make(libraryByTitle)
-	l.byID = make(libraryByID)
-	l.nextID = 1
+// Save serializes a Library to an io.Writer in a format suitable for recovery
+func (l *Library) Save(writer io.Writer) {
+	FprintfOrPanic(writer, "%d\n", len(l.byTitle))
+
+	for _, title := range l.sortedRecordTitles() {
+		l.byTitle[title].Save(writer)
+	}
 }
 
 func (l *Library) String() string {
@@ -109,6 +113,24 @@ func (l *Library) String() string {
 		return "Library is empty"
 	}
 
+	var builder strings.Builder
+	builder.WriteString(fmt.Sprintf("Library contains %d records:", len(l.byTitle)))
+
+	for _, title := range l.sortedRecordTitles() {
+		builder.WriteRune('\n')
+		builder.WriteString(l.byTitle[title].String())
+	}
+
+	return builder.String()
+}
+
+func (l *Library) doClear() {
+	l.byTitle = make(libraryByTitle)
+	l.byID = make(libraryByID)
+	l.nextID = 1
+}
+
+func (l *Library) sortedRecordTitles() []string {
 	titleSet := make([]string, 0, len(l.byTitle))
 
 	for title := range l.byTitle {
@@ -117,13 +139,5 @@ func (l *Library) String() string {
 
 	sort.Strings(titleSet)
 
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("Library contains %d records:", len(titleSet)))
-
-	for _, title := range titleSet {
-		builder.WriteRune('\n')
-		builder.WriteString(l.byTitle[title].String())
-	}
-
-	return builder.String()
+	return titleSet
 }

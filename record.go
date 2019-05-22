@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 )
 
 // Record is a piece of media
@@ -39,6 +40,11 @@ func (r *Record) SetRating(newRating int) Error {
 	r.rating = newRating
 
 	return nil
+}
+
+// Save serializes a Record to an io.Writer in a format suitable for recovery
+func (r *Record) Save(writer io.Writer) {
+	FprintfOrPanic(writer, "%d %s %d %s\n", r.id, r.medium, r.rating, r.title)
 }
 
 func (r *Record) String() string {

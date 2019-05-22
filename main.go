@@ -28,7 +28,7 @@ func start() int {
 		"cL": clearLibrary,
 		"cC": clearCatalog,
 		"cA": clearAll,
-		// "sA": saveAll,
+		"sA": saveAll,
 		// "rA": restoreAll,
 	}
 
@@ -270,6 +270,22 @@ func clearCatalog(_ *Library, catalog *Catalog) Error {
 
 func clearAll(library *Library, catalog *Catalog) Error {
 	library.ClearAll(catalog)
+
+	return nil
+}
+
+const errUnopenableFile = "Could not open file!"
+
+func saveAll(library *Library, catalog *Catalog) Error {
+	filename := readWordOrPanic()
+	file, err := os.Create(filename)
+
+	if err != nil {
+		return NewlineError(errUnopenableFile)
+	}
+
+	library.Save(file)
+	catalog.Save(file)
 
 	return nil
 }

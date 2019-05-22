@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"sort"
 	"strings"
 )
@@ -65,6 +66,15 @@ func (c *Catalog) Clear() {
 	c.collections = make(catalogCollections)
 }
 
+// Save serializes a Catalog to an io.Writer in a format suitable for recovery
+func (c *Catalog) Save(writer io.Writer) {
+	FprintfOrPanic(writer, "%d\n", len(c.collections))
+
+	for _, name := range c.sortedCollectionNames() {
+		c.collections[name].Save(writer)
+	}
+}
+
 func (c *Catalog) String() string {
 	if len(c.collections) == 0 {
 		return "Catalog is empty"
@@ -96,4 +106,16 @@ func clearCollection(collection *Collection) {
 	}
 
 	collection.members = make(collectionMembers)
+}
+
+func (c *Catalog) sortedCollectionNames() []string {
+	nameSet := make([]string, 0, len(c.collections))
+
+	for name := range c.collections {
+		nameSet = append(nameSet, name)
+	}
+
+	sort.Strings(nameSet)
+
+	return nameSet
 }

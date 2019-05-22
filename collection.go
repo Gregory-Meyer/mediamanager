@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"sort"
 	"strings"
 )
 
@@ -42,6 +44,15 @@ func (c *Collection) DeleteMember(record *Record) Error {
 	return nil
 }
 
+// Save serializes a Collection to an io.Writer in a format suitable for recovery
+func (c *Collection) Save(writer io.Writer) {
+	FprintfOrPanic(writer, "%s %d\n", c.name, len(c.members))
+
+	for _, title := range c.sortedMemberTitles() {
+		FprintfOrPanic(writer, "%s\n", title)
+	}
+}
+
 func (c *Collection) String() string {
 	var builder strings.Builder
 
@@ -57,4 +68,16 @@ func (c *Collection) String() string {
 	}
 
 	return builder.String()
+}
+
+func (c *Collection) sortedMemberTitles() []string {
+	titleSet := make([]string, 0, len(c.members))
+
+	for _, record := range c.members {
+		titleSet = append(titleSet, record.title)
+	}
+
+	sort.Strings(titleSet)
+
+	return titleSet
 }
