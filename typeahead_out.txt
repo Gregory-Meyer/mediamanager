@@ -1,0 +1,77 @@
+
+Enter command: Record 1 added
+
+Enter command: Record 2 added
+
+Enter command: Record 3 added
+
+Enter command: Library contains 3 records:
+3: Betamax u !!! Gettysburg
+2: VHS u Showboat
+1: DVD u Tobruk
+
+Enter command: Record 4 added
+
+Enter command: Unrecognized command!
+
+Enter command: Library contains 4 records:
+3: Betamax u !!! Gettysburg
+4: DVD u Bleak
+2: VHS u Showboat
+1: DVD u Tobruk
+
+Enter command: Record 5 added
+
+Enter command: Unrecognized command!
+
+Enter command: Library contains 5 records:
+3: Betamax u !!! Gettysburg
+4: DVD u Bleak
+2: VHS u Showboat
+1: DVD u Tobruk
+5: VHS u War and Peace: The 6-tape version of the incredible Soviet Uni
+
+Enter command: 4: DVD u Bleak
+
+Enter command: 1: DVD u Tobruk
+
+Enter command: 2: VHS u Showboat
+
+Enter command: 3: Betamax u !!! Gettysburg
+
+Enter command: 4: DVD u Bleak
+
+Enter command: 5: VHS u War and Peace: The 6-tape version of the incredible Soviet Uni
+
+Enter command: 1: DVD u Tobruk
+
+Enter command: 2: VHS u Showboat
+
+Enter command: 3: Betamax u !!! Gettysburg
+
+Enter command: 4: DVD u Bleak
+
+Enter command: 5: VHS u War and Peace: The 6-tape version of the incredible Soviet Uni
+
+Enter command: 1: DVD u Tobruk
+
+Enter command: Unrecognized command!
+
+Enter command: 1: DVD u Tobruk
+
+Enter command: Could not read an integer value!
+
+Enter command: 1: DVD u Tobruk
+
+Enter command: 2: VHS u Showboat
+
+Enter command: Could not read an integer value!
+
+Enter command: Could not read an integer value!
+
+Enter command: Unrecognized command!
+
+Enter command: 1: DVD u Tobruk
+
+Enter command: All data deleted
+Done

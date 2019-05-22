@@ -1,0 +1,25 @@
+ar DVD Tobruk
+ar VHS Showboat
+ar Betamax!!! Gettysburg
+pL
+ar DVD       Bleak               
+House
+pL
+ar VHS War and Peace: The 6-tape version of the incredible Soviet Union film that was really long
+pL
+p
+r
+4
+pr1pr2pr3pr4pr5
+pr1pr
+2p
+r  3       p     r   4p
+r5
+pr1xpr2pr3
+pr1prxpr3
+pr1pr2prx
+prxp
+r2pr3
+pr1qq
+
+
