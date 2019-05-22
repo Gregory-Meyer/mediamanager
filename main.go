@@ -278,6 +278,8 @@ func saveAll(library *Library, catalog *Catalog) Error {
 		return NewlineError(errUnopenableFile)
 	}
 
+	defer file.Close()
+
 	library.Save(file)
 	catalog.Save(file)
 
@@ -294,6 +296,7 @@ func restoreAll(library *Library, catalog *Catalog) Error {
 		return NewlineError(errUnopenableFile)
 	}
 
+	defer file.Close()
 	reader := bufio.NewReader(file)
 
 	newLibrary, parseErr := RestoreLibrary(reader)
