@@ -14,16 +14,14 @@ type libraryByID map[int]*Record
 
 // Library is a set of Records that can be indexed by title or by ID
 type Library struct {
-	byTitle       libraryByTitle
-	byID          libraryByID
-	nextID        int
-	sortedByTitle []*Record
-	needsSort     bool
+	byTitle libraryByTitle
+	byID    libraryByID
+	nextID  int
 }
 
 // NewLibrary creates an empty Library ready to track Records
 func NewLibrary() *Library {
-	return &Library{make(libraryByTitle), make(libraryByID), 1, make([]*Record, 0), false}
+	return &Library{make(libraryByTitle), make(libraryByID), 1}
 }
 
 // RestoreLibrary deserializes a Library from a *bufio.Reader
@@ -102,9 +100,6 @@ func (l *Library) AddRecord(medium, title string) (int, Error) {
 	l.byTitle[title] = record
 	l.byID[id] = record
 
-	l.sortedByTitle = append(l.sortedByTitle, record)
-	l.needsSort = true
-
 	return id, nil
 }
 
@@ -122,7 +117,6 @@ func (l *Library) DeleteRecord(title string) (*Record, Error) {
 
 	delete(l.byTitle, record.title)
 	delete(l.byID, record.id)
-	l.sortedByTitle = l.sortedByTitle[:0]
 
 	return record, nil
 }
@@ -214,23 +208,17 @@ func (l *Library) String() string {
 }
 
 func (l *Library) sortedRecords() []*Record {
-	if (len(l.sortedByTitle) > 0 && !l.needsSort) || len(l.byTitle) == 0 {
-		return l.sortedByTitle
+	if len(l.byTitle) == 0 {
+		return []*Record{}
 	}
 
-	// removals occured, rebuild the set
-	if len(l.sortedByTitle) != len(l.byTitle) {
-		if cap(l.sortedByTitle) < len(l.byTitle) {
-			l.sortedByTitle = make([]*Record, 0, len(l.byTitle))
-		}
+	sortedByTitle := make([]*Record, 0, len(l.byTitle))
 
-		for _, record := range l.byTitle {
-			l.sortedByTitle = append(l.sortedByTitle, record)
-		}
+	for _, record := range l.byTitle {
+		sortedByTitle = append(sortedByTitle, record)
 	}
 
-	SortRecordsByTitle(l.sortedByTitle)
-	l.needsSort = false
+	SortRecordsByTitle(sortedByTitle)
 
-	return l.sortedByTitle
+	return sortedByTitle
 }
