@@ -9,6 +9,7 @@ import (
 	"unicode"
 )
 
+// ErrInvalidFile is the error message when an rA command encounters a malformed file.
 const ErrInvalidFile = "Invalid data found in file!"
 
 // Error combines error reporting with newline handling
