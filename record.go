@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"sort"
+	"strings"
 )
 
 // Record is a piece of media
@@ -85,4 +87,28 @@ func (r *Record) String() string {
 	}
 
 	return fmt.Sprintf("%d: %s %d %s", r.id, r.medium, r.rating, r.title)
+}
+
+// SortRecordsByTitle sorts a slice of *Record by title in ascending order
+func SortRecordsByTitle(records []*Record) {
+	sort.Slice(records, func(i, j int) bool {
+		return records[i].title < records[j].title
+	})
+}
+
+// SprintRecords prints a slice of *Record to a string, each one on its own line
+func SprintRecords(records []*Record) string {
+	if len(records) == 0 {
+		return ""
+	}
+
+	var builder strings.Builder
+	builder.WriteString(records[0].String())
+
+	for _, r := range records[1:] {
+		builder.WriteRune('\n')
+		builder.WriteString(r.String())
+	}
+
+	return builder.String()
 }
