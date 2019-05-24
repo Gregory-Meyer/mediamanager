@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"regexp"
 	"strings"
 )
 
@@ -145,6 +146,23 @@ func (l *Library) Save(writer io.Writer) {
 	for _, record := range l.sortedRecords() {
 		record.Save(writer)
 	}
+}
+
+// FindString returns all records that contain a given substring, case insensitively
+func (l *Library) FindString(substr string) []*Record {
+	re := regexp.MustCompile(fmt.Sprintf("(?i)%s", regexp.QuoteMeta(substr)))
+
+	var matches []*Record
+
+	for _, record := range l.byTitle {
+		if re.MatchString(record.title) {
+			matches = append(matches, record)
+		}
+	}
+
+	SortRecordsByTitle(matches)
+
+	return matches
 }
 
 func (l *Library) String() string {

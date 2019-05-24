@@ -28,6 +28,7 @@ func main() {
 		"cA": clearAll,
 		"sA": saveAll,
 		"rA": restoreAll,
+		"fs": findString,
 	}
 
 	library := NewLibrary()
@@ -315,6 +316,19 @@ func restoreAll(library *Library, catalog *Catalog) Error {
 	*catalog = *newCatalog
 
 	fmt.Println("Data loaded")
+
+	return nil
+}
+
+func findString(library *Library, _ *Catalog) Error {
+	substr := ReadWord(stdin)
+	matches := library.FindString(substr)
+
+	if len(matches) == 0 {
+		return NewlineError("No records contain that string!")
+	}
+
+	fmt.Println(SprintRecords(matches))
 
 	return nil
 }
