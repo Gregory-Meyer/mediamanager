@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -165,9 +166,27 @@ func (l *Library) FindString(substr string) []*Record {
 	return matches
 }
 
+const msgLibraryEmpty = "Library is empty"
+
+// ListRatings returns a string of all Records sorted by rating in descending order.
+// Records with the same rating are sorted by title in ascending order.
+func (l *Library) ListRatings() string {
+	if len(l.byTitle) == 0 {
+		return msgLibraryEmpty
+	}
+
+	records := l.sortedRecords()
+
+	sort.SliceStable(records, func(i, j int) bool {
+		return records[i].rating > records[j].rating
+	})
+
+	return SprintRecords(records)
+}
+
 func (l *Library) String() string {
 	if len(l.byTitle) == 0 {
-		return "Library is empty"
+		return msgLibraryEmpty
 	}
 
 	var builder strings.Builder

@@ -29,6 +29,7 @@ func main() {
 		"sA": saveAll,
 		"rA": restoreAll,
 		"fs": findString,
+		"lr": listRatings,
 	}
 
 	library := NewLibrary()
@@ -329,6 +330,12 @@ func findString(library *Library, _ *Catalog) Error {
 	}
 
 	fmt.Println(SprintRecords(matches))
+
+	return nil
+}
+
+func listRatings(library *Library, _ *Catalog) Error {
+	fmt.Println(library.ListRatings())
 
 	return nil
 }
