@@ -95,6 +95,12 @@ func ReadWord(reader *bufio.Reader) string {
 		word.WriteRune(r)
 	}
 
+	built := word.String()
+
+	if len(built) == 0 {
+		panic("didn't read any runes before EOF")
+	}
+
 	return word.String()
 }
 
