@@ -41,7 +41,38 @@ Enter command: Could not open file!
 
 Enter command: Could not open file!
 
+Enter command: Memory allocations:
+Records: 2
+Collections: 1
+
+Enter command: Library contains 2 records:
+2: DVD u Mars Attacks!
+1: DVD u Tobruk
+
+Enter command: Catalog contains 1 collections:
+Collection warmovies contains:
+2: DVD u Mars Attacks!
+
 Enter command: Invalid data found in file!
+
+Enter command: Memory allocations:
+Records: 2
+Collections: 1
+
+Enter command: Library contains 2 records:
+2: DVD u Mars Attacks!
+1: DVD u Tobruk
+
+Enter command: Catalog contains 1 collections:
+Collection warmovies contains:
+2: DVD u Mars Attacks!
+
+Enter command: Record 3 added
+
+Enter command: Library contains 3 records:
+3: DVD u Harry Potter and the Goblet of Fire
+2: DVD u Mars Attacks!
+1: DVD u Tobruk
 
 Enter command: All data deleted
 Done

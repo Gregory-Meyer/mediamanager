@@ -1,17 +1,41 @@
 
+Enter command: Memory allocations:
+Records: 0
+Collections: 0
+
 Enter command: Library is empty
 
 Enter command: Catalog is empty
 
 Enter command: Record 1 added
 
+Enter command: Memory allocations:
+Records: 1
+Collections: 0
+
 Enter command: Record 2 added
+
+Enter command: Memory allocations:
+Records: 2
+Collections: 0
 
 Enter command: Record 3 added
 
+Enter command: Memory allocations:
+Records: 3
+Collections: 0
+
 Enter command: Record 4 added
 
+Enter command: Memory allocations:
+Records: 4
+Collections: 0
+
 Enter command: Record 5 added
+
+Enter command: Memory allocations:
+Records: 5
+Collections: 0
 
 Enter command: Library contains 5 records:
 3: DVD u Mars Attacks!
@@ -31,6 +55,10 @@ Enter command: Rating for record 4 changed to 5
 Enter command: 1: DVD 1 Tobruk
 
 Enter command: Record 3 Mars Attacks! deleted
+
+Enter command: Memory allocations:
+Records: 4
+Collections: 0
 
 Enter command: Library contains 4 records:
 4: DVD 5 Much Ado about Nothing
@@ -78,7 +106,15 @@ Enter command: All collections deleted
 
 Enter command: All records deleted
 
+Enter command: Memory allocations:
+Records: 0
+Collections: 0
+
 Enter command: Data loaded
+
+Enter command: Memory allocations:
+Records: 5
+Collections: 2
 
 Enter command: Record 7 added
 
@@ -111,7 +147,15 @@ Enter command: Catalog contains 1 collections:
 Collection favorites contains:
 5: VHS u Zorba the Greek
 
+Enter command: Memory allocations:
+Records: 6
+Collections: 1
+
 Enter command: All data deleted
+
+Enter command: Memory allocations:
+Records: 0
+Collections: 0
 
 Enter command: All data deleted
 Done

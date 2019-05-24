@@ -19,7 +19,15 @@ dr Mars Attacks!
 cL
 sA .. should be invalid filename on a Unix machine
 rA nonexistentfile
+pa
+pL
+pC
 rA badfile.txt
+pa
+pL
+pC
+ar DVD Harry Potter and the Goblet of Fire
+pL
 qq
 
 
