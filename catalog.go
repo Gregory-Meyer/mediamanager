@@ -155,16 +155,12 @@ func (c *Catalog) CombineCollections(firstSrcName, secondSrcName, dstName string
 	dst := NewCollection(dstName)
 	c.collections[dstName] = dst
 
-	for id, record := range firstSrc.members {
-		dst.members[id] = record
-		record.numCollections++
+	for _, record := range firstSrc.members {
+		_ = dst.AddMember(record)
 	}
 
-	for id, record := range secondSrc.members {
-		if _, ok := dst.members[id]; !ok {
-			record.numCollections++
-			dst.members[id] = record
-		}
+	for _, record := range secondSrc.members {
+		_ = dst.AddMember(record)
 	}
 
 	return nil
