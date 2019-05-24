@@ -135,19 +135,7 @@ func (c *Catalog) CollectionStatistics() (numOne int, numMany int, total int) {
 
 // CombineCollections combines two source Collections into a destination
 // Collection with a new name, leaving the two source Collections unmodified
-func (c *Catalog) CombineCollections(firstSrcName, secondSrcName, dstName string) Error {
-	firstSrc, ok := c.collections[firstSrcName]
-
-	if !ok {
-		return NewlineError(errNoSuchCollection)
-	}
-
-	secondSrc, ok := c.collections[secondSrcName]
-
-	if !ok {
-		return NewlineError(errNoSuchCollection)
-	}
-
+func (c *Catalog) CombineCollections(firstSrc, secondSrc *Collection, dstName string) Error {
 	if _, ok := c.collections[dstName]; ok {
 		return NewlineError(errDuplicateCollection)
 	}

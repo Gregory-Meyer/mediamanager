@@ -90,6 +90,11 @@ func (c *Collection) Save(writer io.Writer) {
 	}
 }
 
+// Name returns the name of this Collection
+func (c *Collection) Name() string {
+	return c.name
+}
+
 func (c *Collection) String() string {
 	var builder strings.Builder
 

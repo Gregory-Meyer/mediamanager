@@ -31,6 +31,7 @@ func main() {
 		"fs": findString,
 		"lr": listRatings,
 		"cs": collectionStatistics,
+		"cc": combineCollections,
 	}
 
 	library := NewLibrary()
@@ -351,6 +352,33 @@ func collectionStatistics(library *Library, catalog *Catalog) Error {
 Collections contain a total of %d Records
 `
 	fmt.Printf(fmtStr, numOne, numRecords, numMany, numRecords, total)
+
+	return nil
+}
+
+func combineCollections(_ *Library, catalog *Catalog) Error {
+	firstSrc, err := readCollection(catalog)
+
+	if err != nil {
+		return err
+	}
+
+	secondSrc, err := readCollection(catalog)
+
+	if err != nil {
+		return err
+	}
+
+	dstName := ReadWord(stdin)
+
+	err = catalog.CombineCollections(firstSrc, secondSrc, dstName)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Collections %s and %s combined into new collection %s\n",
+		firstSrc.Name(), secondSrc.Name(), dstName)
 
 	return nil
 }
