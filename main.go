@@ -323,13 +323,13 @@ func restoreAll(library *Library, catalog *Catalog) Error {
 
 func findString(library *Library, _ *Catalog) Error {
 	substr := ReadWord(stdin)
-	matches := library.FindString(substr)
+	matches, err := library.FindString(substr)
 
-	if len(matches) == 0 {
-		return NewlineError("No records contain that string!")
+	if err != nil {
+		return err
 	}
 
-	fmt.Println(SprintRecords(matches))
+	fmt.Println(matches)
 
 	return nil
 }

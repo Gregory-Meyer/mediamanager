@@ -149,8 +149,9 @@ func (l *Library) Save(writer io.Writer) {
 	}
 }
 
-// FindString returns all records that contain a given substring, case insensitively
-func (l *Library) FindString(substr string) []*Record {
+// FindString returns all a string of all Records whose title contains a given substring,
+// case insensitively. The Records are sorted by title in ascending order.
+func (l *Library) FindString(substr string) (string, Error) {
 	re := regexp.MustCompile(fmt.Sprintf("(?i)%s", regexp.QuoteMeta(substr)))
 
 	var matches []*Record
@@ -161,9 +162,13 @@ func (l *Library) FindString(substr string) []*Record {
 		}
 	}
 
+	if len(matches) == 0 {
+		return "", NewlineError("No records contain that string!")
+	}
+
 	SortRecordsByTitle(matches)
 
-	return matches
+	return SprintRecords(matches), nil
 }
 
 const msgLibraryEmpty = "Library is empty"
