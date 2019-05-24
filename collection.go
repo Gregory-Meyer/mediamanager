@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"sort"
 	"strings"
 )
 
@@ -99,10 +98,8 @@ func (c *Collection) String() string {
 	if len(c.members) == 0 {
 		builder.WriteString(" None")
 	} else {
-		for _, record := range c.sortedMembers() {
-			builder.WriteRune('\n')
-			builder.WriteString(record.String())
-		}
+		builder.WriteRune('\n')
+		builder.WriteString(SprintRecords(c.sortedMembers()))
 	}
 
 	return builder.String()
@@ -115,9 +112,7 @@ func (c *Collection) sortedMembers() []*Record {
 		memberSet = append(memberSet, record)
 	}
 
-	sort.Slice(memberSet, func(i, j int) bool {
-		return memberSet[i].title < memberSet[j].title
-	})
+	SortRecordsByTitle(memberSet)
 
 	return memberSet
 }

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"sort"
 	"strings"
 )
 
@@ -154,12 +153,8 @@ func (l *Library) String() string {
 	}
 
 	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("Library contains %d records:", len(l.byTitle)))
-
-	for _, record := range l.sortedRecords() {
-		builder.WriteRune('\n')
-		builder.WriteString(record.String())
-	}
+	builder.WriteString(fmt.Sprintf("Library contains %d records:\n", len(l.byTitle)))
+	builder.WriteString(SprintRecords(l.sortedRecords()))
 
 	return builder.String()
 }
@@ -177,9 +172,7 @@ func (l *Library) sortedRecords() []*Record {
 		recordSet = append(recordSet, record)
 	}
 
-	sort.Slice(recordSet, func(i, j int) bool {
-		return recordSet[i].title < recordSet[j].title
-	})
+	SortByTitle(recordSet)
 
 	return recordSet
 }
