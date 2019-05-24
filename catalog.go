@@ -93,7 +93,7 @@ func (c *Catalog) Clear() {
 		clearCollection(collection)
 	}
 
-	c.collections = make(catalogCollections)
+	*c = *NewCatalog()
 }
 
 // Save serializes a Catalog to an io.Writer in a format suitable for recovery
