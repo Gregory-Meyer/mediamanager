@@ -1,0 +1,43 @@
+cs
+lr
+ar DVD Theobald - King of Scotland and Wales
+ar DVD John Swales contributions to obscure Poetry
+ar VHS Zorba the Greek
+ar VHS The War of the Worlds
+ar DVD Much Ado about Nothing starring John Belushi and Ella Fitzgerald
+pL
+fs contrib
+fs Wales
+fs the
+fs Syzygy
+mr 2 1
+mr 1 1
+mr 5 1
+mr 4 3
+mr 3 3
+lr
+cs
+ac Junk
+ac literature
+am Junk 2
+am Junk 1
+am literature 3
+cs
+am literature 4
+am literature 5
+pC
+mt 5 Shakespeare's Much Ado about Nothing
+pc literature
+pL
+cs
+mt 1 Are you kidding?
+mt 2 Are you kidding?
+pL
+lr
+pC
+ac trash              
+cc Junk literature trash
+cc Junk literature garbage
+pC
+cs
+qq

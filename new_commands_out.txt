@@ -1,0 +1,154 @@
+
+Enter command: 0 out of 0 Records appear in at least one Collection
+0 out of 0 Records appear in more than one Collection
+Collections contain a total of 0 Records
+
+Enter command: Library is empty
+
+Enter command: Record 1 added
+
+Enter command: Record 2 added
+
+Enter command: Record 3 added
+
+Enter command: Record 4 added
+
+Enter command: Record 5 added
+
+Enter command: Library contains 5 records:
+2: DVD u John Swales contributions to obscure Poetry
+5: DVD u Much Ado about Nothing starring John Belushi and Ella Fitzgerald
+4: VHS u The War of the Worlds
+1: DVD u Theobald - King of Scotland and Wales
+3: VHS u Zorba the Greek
+
+Enter command: 2: DVD u John Swales contributions to obscure Poetry
+
+Enter command: 2: DVD u John Swales contributions to obscure Poetry
+1: DVD u Theobald - King of Scotland and Wales
+
+Enter command: 4: VHS u The War of the Worlds
+1: DVD u Theobald - King of Scotland and Wales
+3: VHS u Zorba the Greek
+
+Enter command: No records contain that string!
+
+Enter command: Rating for record 2 changed to 1
+
+Enter command: Rating for record 1 changed to 1
+
+Enter command: Rating for record 5 changed to 1
+
+Enter command: Rating for record 4 changed to 3
+
+Enter command: Rating for record 3 changed to 3
+
+Enter command: 4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+2: DVD 1 John Swales contributions to obscure Poetry
+5: DVD 1 Much Ado about Nothing starring John Belushi and Ella Fitzgerald
+1: DVD 1 Theobald - King of Scotland and Wales
+
+Enter command: 0 out of 5 Records appear in at least one Collection
+0 out of 5 Records appear in more than one Collection
+Collections contain a total of 0 Records
+
+Enter command: Collection Junk added
+
+Enter command: Collection literature added
+
+Enter command: Member 2 John Swales contributions to obscure Poetry added
+
+Enter command: Member 1 Theobald - King of Scotland and Wales added
+
+Enter command: Member 3 Zorba the Greek added
+
+Enter command: 3 out of 5 Records appear in at least one Collection
+0 out of 5 Records appear in more than one Collection
+Collections contain a total of 3 Records
+
+Enter command: Member 4 The War of the Worlds added
+
+Enter command: Member 5 Much Ado about Nothing starring John Belushi and Ella Fitzgerald added
+
+Enter command: Catalog contains 2 collections:
+Collection Junk contains:
+2: DVD 1 John Swales contributions to obscure Poetry
+1: DVD 1 Theobald - King of Scotland and Wales
+Collection literature contains:
+5: DVD 1 Much Ado about Nothing starring John Belushi and Ella Fitzgerald
+4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+
+Enter command: Title for record 5 changed to Shakespeare's Much Ado about Nothing
+
+Enter command: Collection literature contains:
+5: DVD 1 Shakespeare's Much Ado about Nothing
+4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+
+Enter command: Library contains 5 records:
+2: DVD 1 John Swales contributions to obscure Poetry
+5: DVD 1 Shakespeare's Much Ado about Nothing
+4: VHS 3 The War of the Worlds
+1: DVD 1 Theobald - King of Scotland and Wales
+3: VHS 3 Zorba the Greek
+
+Enter command: 5 out of 5 Records appear in at least one Collection
+0 out of 5 Records appear in more than one Collection
+Collections contain a total of 5 Records
+
+Enter command: Title for record 1 changed to Are you kidding?
+
+Enter command: Library already has a record with this title!
+
+Enter command: Library contains 5 records:
+1: DVD 1 Are you kidding?
+2: DVD 1 John Swales contributions to obscure Poetry
+5: DVD 1 Shakespeare's Much Ado about Nothing
+4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+
+Enter command: 4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+1: DVD 1 Are you kidding?
+2: DVD 1 John Swales contributions to obscure Poetry
+5: DVD 1 Shakespeare's Much Ado about Nothing
+
+Enter command: Catalog contains 2 collections:
+Collection Junk contains:
+1: DVD 1 Are you kidding?
+2: DVD 1 John Swales contributions to obscure Poetry
+Collection literature contains:
+5: DVD 1 Shakespeare's Much Ado about Nothing
+4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+
+Enter command: Collection trash added
+
+Enter command: Catalog already has a collection with this name!
+
+Enter command: Collections Junk and literature combined into new collection garbage
+
+Enter command: Catalog contains 4 collections:
+Collection Junk contains:
+1: DVD 1 Are you kidding?
+2: DVD 1 John Swales contributions to obscure Poetry
+Collection garbage contains:
+1: DVD 1 Are you kidding?
+2: DVD 1 John Swales contributions to obscure Poetry
+5: DVD 1 Shakespeare's Much Ado about Nothing
+4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+Collection literature contains:
+5: DVD 1 Shakespeare's Much Ado about Nothing
+4: VHS 3 The War of the Worlds
+3: VHS 3 Zorba the Greek
+Collection trash contains: None
+
+Enter command: 5 out of 5 Records appear in at least one Collection
+5 out of 5 Records appear in more than one Collection
+Collections contain a total of 10 Records
+
+Enter command: All data deleted
+Done
