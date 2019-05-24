@@ -214,7 +214,7 @@ func (l *Library) sortedRecords() []*Record {
 		recordSet = append(recordSet, record)
 	}
 
-	SortByTitle(recordSet)
+	SortRecordsByTitle(recordSet)
 
 	return recordSet
 }
