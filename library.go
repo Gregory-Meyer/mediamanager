@@ -14,14 +14,16 @@ type libraryByID map[int]*Record
 
 // Library is a set of Records that can be indexed by title or by ID
 type Library struct {
-	byTitle libraryByTitle
-	byID    libraryByID
-	nextID  int
+	byTitle       libraryByTitle
+	byID          libraryByID
+	nextID        int
+	sortedByTitle []*Record
+	needsSort     bool
 }
 
 // NewLibrary creates an empty Library ready to track Records
 func NewLibrary() *Library {
-	return &Library{make(libraryByTitle), make(libraryByID), 1}
+	return &Library{make(libraryByTitle), make(libraryByID), 1, make([]*Record, 0), false}
 }
 
 // RestoreLibrary deserializes a Library from a *bufio.Reader
@@ -100,6 +102,9 @@ func (l *Library) AddRecord(medium, title string) (int, Error) {
 	l.byTitle[title] = record
 	l.byID[id] = record
 
+	l.sortedByTitle = append(l.sortedByTitle, record)
+	l.needsSort = true
+
 	return id, nil
 }
 
@@ -117,6 +122,7 @@ func (l *Library) DeleteRecord(title string) (*Record, Error) {
 
 	delete(l.byTitle, record.title)
 	delete(l.byID, record.id)
+	l.sortedByTitle = l.sortedByTitle[:0]
 
 	return record, nil
 }
@@ -129,7 +135,7 @@ func (l *Library) Clear(catalog *Catalog) Error {
 		}
 	}
 
-	l.doClear()
+	*l = *NewLibrary()
 
 	return nil
 }
@@ -137,7 +143,7 @@ func (l *Library) Clear(catalog *Catalog) Error {
 // ClearAll erases all Records from a Library and all Collections from a Catalog
 func (l *Library) ClearAll(catalog *Catalog) {
 	catalog.Clear()
-	l.doClear()
+	*l = *NewLibrary()
 }
 
 // Save serializes a Library to an io.Writer in a format suitable for recovery
@@ -207,20 +213,24 @@ func (l *Library) String() string {
 	return builder.String()
 }
 
-func (l *Library) doClear() {
-	l.byTitle = make(libraryByTitle)
-	l.byID = make(libraryByID)
-	l.nextID = 1
-}
-
 func (l *Library) sortedRecords() []*Record {
-	recordSet := make([]*Record, 0, len(l.byTitle))
-
-	for _, record := range l.byTitle {
-		recordSet = append(recordSet, record)
+	if (len(l.sortedByTitle) > 0 && !l.needsSort) || len(l.byTitle) == 0 {
+		return l.sortedByTitle
 	}
 
-	SortRecordsByTitle(recordSet)
+	// removals occured, rebuild the set
+	if len(l.sortedByTitle) != len(l.byTitle) {
+		if cap(l.sortedByTitle) < len(l.byTitle) {
+			l.sortedByTitle = make([]*Record, 0, len(l.byTitle))
+		}
 
-	return recordSet
+		for _, record := range l.byTitle {
+			l.sortedByTitle = append(l.sortedByTitle, record)
+		}
+	}
+
+	SortRecordsByTitle(l.sortedByTitle)
+	l.needsSort = false
+
+	return l.sortedByTitle
 }
