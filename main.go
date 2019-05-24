@@ -16,6 +16,7 @@ func main() {
 		"pc": printCollection,
 		"pL": printLibrary,
 		"pC": printCatalog,
+		"pa": printAllocations,
 		"ar": addRecord,
 		"ac": addCollection,
 		"am": addMember,
@@ -106,8 +107,18 @@ func printLibrary(library *Library, _ *Catalog) Error {
 	return nil
 }
 
-func printCatalog(_ *Library, cat *Catalog) Error {
-	fmt.Println(cat)
+func printCatalog(_ *Library, catalog *Catalog) Error {
+	fmt.Println(catalog)
+
+	return nil
+}
+
+func printAllocations(library *Library, catalog *Catalog) Error {
+	fmtStr := `Memory allocations:
+Records: %d
+Collections: %d
+`
+	fmt.Printf(fmtStr, library.NumRecords(), catalog.NumCollections())
 
 	return nil
 }

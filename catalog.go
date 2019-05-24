@@ -62,6 +62,11 @@ func (c *Catalog) FindCollection(name string) (*Collection, Error) {
 
 const errDuplicateCollection = "Catalog already has a collection with this name!"
 
+// NumCollections returns the number of Collections in this Catalog
+func (c *Catalog) NumCollections() int {
+	return len(c.collections)
+}
+
 // AddCollection adds a Collection to a Catalog
 func (c *Catalog) AddCollection(name string) Error {
 	if _, ok := c.collections[name]; ok {
