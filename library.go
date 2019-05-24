@@ -87,10 +87,12 @@ func (l *Library) FindRecordByID(id int) (*Record, Error) {
 	return record, nil
 }
 
+const errDuplicateRecordTitle = "Library already has a record with this title!"
+
 // AddRecord adds a Record into the Library
 func (l *Library) AddRecord(medium, title string) (int, Error) {
 	if _, ok := l.byTitle[title]; ok {
-		return 0, RegularError("Library already has a record with this title!")
+		return 0, RegularError(errDuplicateRecordTitle)
 	}
 
 	id := l.nextID
@@ -193,6 +195,19 @@ func (l *Library) ListRatings() string {
 // NumRecords returns the number of Records in the Library
 func (l *Library) NumRecords() int {
 	return len(l.byTitle)
+}
+
+// ModifyTitle changes the title of a Record in the Library
+func (l *Library) ModifyTitle(record *Record, newTitle string) Error {
+	if _, ok := l.byTitle[newTitle]; ok {
+		return RegularError(errDuplicateRecordTitle)
+	}
+
+	delete(l.byTitle, record.title)
+	record.title = newTitle
+	l.byTitle[newTitle] = record
+
+	return nil
 }
 
 func (l *Library) String() string {

@@ -32,6 +32,7 @@ func main() {
 		"lr": listRatings,
 		"cs": collectionStatistics,
 		"cc": combineCollections,
+		"mt": modifyTitle,
 	}
 
 	library := NewLibrary()
@@ -379,6 +380,30 @@ func combineCollections(_ *Library, catalog *Catalog) Error {
 
 	fmt.Printf("Collections %s and %s combined into new collection %s\n",
 		firstSrc.Name(), secondSrc.Name(), dstName)
+
+	return nil
+}
+
+func modifyTitle(library *Library, _ *Catalog) Error {
+	record, err := readRecordByID(library)
+
+	if err != nil {
+		return err
+	}
+
+	newTitle, err := readTitle()
+
+	if err != nil {
+		return err
+	}
+
+	err = library.ModifyTitle(record, newTitle)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Title for record %d changed to %s\n", record.ID(), newTitle)
 
 	return nil
 }
