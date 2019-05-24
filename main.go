@@ -30,6 +30,7 @@ func main() {
 		"rA": restoreAll,
 		"fs": findString,
 		"lr": listRatings,
+		"cs": collectionStatistics,
 	}
 
 	library := NewLibrary()
@@ -336,6 +337,20 @@ func findString(library *Library, _ *Catalog) Error {
 
 func listRatings(library *Library, _ *Catalog) Error {
 	fmt.Println(library.ListRatings())
+
+	return nil
+}
+
+func collectionStatistics(library *Library, catalog *Catalog) Error {
+	numOne, numMany, total := catalog.CollectionStatistics()
+	numRecords := library.NumRecords()
+
+	// could use string concatenation instead here
+	fmtStr := `%d out of %d Records appear in at least one Collection
+%d out of %d Records appear in more than one Collection
+Collections contain a total of %d Records
+`
+	fmt.Printf(fmtStr, numOne, numRecords, numMany, numRecords, total)
 
 	return nil
 }

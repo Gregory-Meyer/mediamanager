@@ -60,10 +60,12 @@ func (c *Catalog) FindCollection(name string) (*Collection, Error) {
 	return collection, nil
 }
 
+const errDuplicateCollection = "Catalog already has a collection with this name!"
+
 // AddCollection adds a Collection to a Catalog
 func (c *Catalog) AddCollection(name string) Error {
 	if _, ok := c.collections[name]; ok {
-		return NewlineError("Catalog already has a collection with this name!")
+		return NewlineError(errDuplicateCollection)
 	}
 
 	c.collections[name] = NewCollection(name)
@@ -101,6 +103,71 @@ func (c *Catalog) Save(writer io.Writer) {
 	for _, collection := range c.sortedCollections() {
 		collection.Save(writer)
 	}
+}
+
+// CollectionStatistics computes the number of Records that appear in at least
+// one Collection, the number of Records that appear in more than one
+// Collection, and the total of Records contained by Collections
+func (c *Catalog) CollectionStatistics() (numOne int, numMany int, total int) {
+	counts := make(map[int]int) // record ID -> number of collections containing it
+
+	// fabled double for loop for minimum performance
+	for _, collection := range c.collections {
+		total += len(collection.members)
+
+		for _, record := range collection.members {
+			// no way to avoid double lookup here, but Go makes map lookups cheap
+			if prevCount, ok := counts[record.id]; ok {
+				counts[record.id] = prevCount + 1
+
+				if prevCount == 1 {
+					numMany++
+				}
+			} else {
+				counts[record.id] = 1
+				numOne++
+			}
+		}
+	}
+
+	return numOne, numMany, total
+}
+
+// CombineCollections combines two source Collections into a destination
+// Collection with a new name, leaving the two source Collections unmodified
+func (c *Catalog) CombineCollections(firstSrcName, secondSrcName, dstName string) Error {
+	firstSrc, ok := c.collections[firstSrcName]
+
+	if !ok {
+		return NewlineError(errNoSuchCollection)
+	}
+
+	secondSrc, ok := c.collections[secondSrcName]
+
+	if !ok {
+		return NewlineError(errNoSuchCollection)
+	}
+
+	if _, ok := c.collections[dstName]; ok {
+		return NewlineError(errDuplicateCollection)
+	}
+
+	dst := NewCollection(dstName)
+	c.collections[dstName] = dst
+
+	for id, record := range firstSrc.members {
+		dst.members[id] = record
+		record.numCollections++
+	}
+
+	for id, record := range secondSrc.members {
+		if _, ok := dst.members[id]; !ok {
+			record.numCollections++
+			dst.members[id] = record
+		}
+	}
+
+	return nil
 }
 
 func (c *Catalog) String() string {

@@ -149,8 +149,9 @@ func (l *Library) Save(writer io.Writer) {
 	}
 }
 
-// FindString returns all a string of all Records whose title contains a given substring,
-// case insensitively. The Records are sorted by title in ascending order.
+// FindString returns all a string of all Records whose title contains a given
+// substring, case insensitively. The Records are sorted by title in ascending
+// order.
 func (l *Library) FindString(substr string) (string, Error) {
 	re := regexp.MustCompile(fmt.Sprintf("(?i)%s", regexp.QuoteMeta(substr)))
 
@@ -173,8 +174,8 @@ func (l *Library) FindString(substr string) (string, Error) {
 
 const msgLibraryEmpty = "Library is empty"
 
-// ListRatings returns a string of all Records sorted by rating in descending order.
-// Records with the same rating are sorted by title in ascending order.
+// ListRatings returns a string of all Records sorted by rating in descending
+// order. Records with the same rating are sorted by title in ascending order.
 func (l *Library) ListRatings() string {
 	if len(l.byTitle) == 0 {
 		return msgLibraryEmpty
@@ -187,6 +188,11 @@ func (l *Library) ListRatings() string {
 	})
 
 	return SprintRecords(records)
+}
+
+// NumRecords returns the number of Records in the Library
+func (l *Library) NumRecords() int {
+	return len(l.byTitle)
 }
 
 func (l *Library) String() string {
