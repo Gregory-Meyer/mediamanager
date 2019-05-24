@@ -1,8 +1,8 @@
 # Micro Media Manager
 
 `mediamanager` is a CLI application written in Go that allows users to create,
-view, and manipulate a media collection. `mediamanager` is a re-implementation
-of an old class project of mine.
+view, and manipulate a media collection. `mediamanager` is a rewrite of a
+project from a course I took.
 
 # Usage
 
@@ -73,3 +73,7 @@ of an old class project of mine.
   new Collection from the set union of two existing Collections, leaving the two
   source Collections unmodified.
 * `mt <ID> <title>`: modify title. Change the title of a Record.
+
+# License
+
+`mediamanager` is licensed under the MIT license.
